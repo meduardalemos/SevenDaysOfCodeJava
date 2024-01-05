@@ -42,4 +42,5 @@ bin/
 .DS_Store
 
 ### other files ###
-TestandoHtmlGenerator.java
+src/main/java/other
+src/main/frontend
