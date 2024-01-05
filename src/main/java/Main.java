@@ -26,14 +26,11 @@ public class Main {
 
         // Variáveis para controle da quantidade de resultados obtidos
         int desiredResults = 250;
-        int totalResults = 0;
         int currentPage = 1;
+        int moviePosition = 1;
 
-        // Cria listas para armazenar títulos e caminho dos posters
-        List<String> titles = new ArrayList<>();
-        List<String> posterPaths = new ArrayList<>();
-        List<Integer> releaseYears = new ArrayList<>();
-        List<Double> voteAverages = new ArrayList<>();
+        // Cria lista para armazenar os filmes
+        List<Movie> top250Movies = new ArrayList<>();
 
         do {
             try {
@@ -51,11 +48,9 @@ public class Main {
                 JSONObject json = new JSONObject(response.body());
                 JSONArray resultsArray = json.getJSONArray("results");
 
-                totalResults += resultsArray.length();
-
                 for (int i = 0; i < resultsArray.length(); i++) {
 
-                    if(titles.size() >= desiredResults) {
+                    if(top250Movies.size() >= desiredResults) {
                         break;
                     }
 
@@ -66,11 +61,12 @@ public class Main {
                     Integer releaseYear = Integer.parseInt(movie.getString("release_date")
                             .substring(0, 4));
                     Double voteAverage = movie.getDouble("vote_average");
+                    int ranking = moviePosition;
+                    moviePosition++;
 
-                    titles.add(title);
-                    posterPaths.add(posterPath);
-                    releaseYears.add(releaseYear);
-                    voteAverages.add(voteAverage);
+                    Movie currentMovie = new Movie(title, posterPath, releaseYear, voteAverage,
+                            ranking);
+                    top250Movies.add(currentMovie);
                 }
 
                 currentPage++;
@@ -79,6 +75,8 @@ public class Main {
                 System.err.println("Ocorreu um erro ao tentar acessar a API: " + e.getMessage());
                 e.printStackTrace();
             }
-        } while (titles.size() < desiredResults);
+        } while (top250Movies.size() < desiredResults);
+
+        System.out.println(top250Movies);
     }
 }
