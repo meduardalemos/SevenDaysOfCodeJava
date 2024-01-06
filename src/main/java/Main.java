@@ -5,6 +5,7 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+import Dominio.Movie;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
