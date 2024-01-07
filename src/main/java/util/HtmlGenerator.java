@@ -1,12 +1,14 @@
-package Dominio;
+package util;
+
+import model.Movie;
 
 import java.io.PrintWriter;
 import java.util.List;
 
-public class HTMLGenerator {
+public class HtmlGenerator {
     private final PrintWriter printWriter;
 
-    public HTMLGenerator(PrintWriter printWriter) {
+    public HtmlGenerator(PrintWriter printWriter) {
         this.printWriter = printWriter;
     }
 

@@ -1,83 +1,32 @@
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.List;
+import model.Movie;
+import util.HtmlGenerator;
+import util.TmdbApiCaller;
 
-import Dominio.Movie;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.http.HttpClient;
+import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) {
-
+        // Definição da ApiKey
         String apiKey = System.getenv("TMDB_API_KEY");
 
-        // Verifica se a chave API está configurada como varivável de ambiente chamada TMDB_API_KEY
-        if (apiKey == null) {
-            System.out.println("A variável de ambiente TMDB_API_KEY não está configurada no sistema.");
-            return;
+        // Requisição a API retorna lista do top 250 filmes
+        HttpClient httpClient = HttpClient.newHttpClient();
+        TmdbApiCaller tmdbApiCaller = new TmdbApiCaller(apiKey, httpClient);
+        List<Movie> top250movies = tmdbApiCaller.getTop250Movies();
+
+        // Gera Htlm com os top 250 filmes
+        try(PrintWriter writer = new PrintWriter("src/main/frontend/index.html")){
+            HtmlGenerator htmlGenerator = new HtmlGenerator(writer);
+            htmlGenerator.generateHTML(top250movies);
+            System.out.println("Arquivo html salvo com sucesso!");
+        } catch (IOException ex) {
+            System.err.println("Erro ao salvar o arquivo html: " + ex.getMessage());
+            ex.printStackTrace();
         }
 
-        // Requisição a API
-        HttpClient client = HttpClient.newHttpClient();
-        // String responseBody = null;
-
-        // Variáveis para controle da quantidade de resultados obtidos
-        int desiredResults = 250;
-        int currentPage = 1;
-        int moviePosition = 1;
-
-        // Cria lista para armazenar os filmes
-        List<Movie> top250Movies = new ArrayList<>();
-
-        do {
-            try {
-                URI uri = new URI("https://api.themoviedb.org/3/movie/top_rated?api_key=" +
-                        apiKey + "&page=" + currentPage);
-
-                HttpRequest request = HttpRequest.newBuilder()
-                        .uri(uri)
-                        .GET()
-                        .build();
-
-                HttpResponse<String> response = client.send(request,
-                        HttpResponse.BodyHandlers.ofString());
-
-                JSONObject json = new JSONObject(response.body());
-                JSONArray resultsArray = json.getJSONArray("results");
-
-                for (int i = 0; i < resultsArray.length(); i++) {
-
-                    if(top250Movies.size() >= desiredResults) {
-                        break;
-                    }
-
-                    JSONObject movie = resultsArray.getJSONObject(i);
-
-                    String title = movie.getString("title");
-                    String posterPath = movie.getString("poster_path");
-                    Integer releaseYear = Integer.parseInt(movie.getString("release_date")
-                            .substring(0, 4));
-                    Double voteAverage = movie.getDouble("vote_average");
-                    int ranking = moviePosition;
-                    moviePosition++;
-
-                    Movie currentMovie = new Movie(title, posterPath, releaseYear, voteAverage,
-                            ranking);
-                    top250Movies.add(currentMovie);
-                }
-
-                currentPage++;
-
-            } catch (Exception e) {
-                System.err.println("Ocorreu um erro ao tentar acessar a API: " + e.getMessage());
-                e.printStackTrace();
-            }
-        } while (top250Movies.size() < desiredResults);
-
-        System.out.println(top250Movies);
     }
 }

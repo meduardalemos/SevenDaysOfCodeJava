@@ -1,4 +1,4 @@
-package Dominio;
+package model;
 
 public class Movie {
     private final String title;
