@@ -59,9 +59,9 @@ public class HtmlGenerator {
                                             <h5 class="rate-text">Rate: %.1f</h5>
                                         </div>
                                     </div>
-                """.formatted(movie.getRanking(), movie.getTitle(), movie.getReleaseYear(),
-                movie.getPosterPath(),
-                movie.getTitle(), movie.getVoteAverage());
+                """.formatted(movie.getRanking(), movie.getTitle(), movie.getYear(),
+                movie.getUrlImage(),
+                movie.getTitle(), movie.getRating());
         printWriter.write(html);
     }
 }

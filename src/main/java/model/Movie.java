@@ -1,43 +1,28 @@
 package model;
 
-public class Movie {
-    private final String title;
-    private final String posterPath;
-    private final Integer releaseYear;
-    private final Double voteAverage;
-    private final int ranking;
+public class Movie extends Content {
+    private int ranking;
 
-    public Movie(String title, String posterPath, Integer releaseYear, Double voteAverage,
-                 int ranking) {
-        this.title = title;
-        this.posterPath = posterPath;
-        this.releaseYear = releaseYear;
-        this.voteAverage = voteAverage;
-        this.ranking = ranking;
+    public Movie(String title, String urlImage, Integer year, Double rating) {
+        super(title, urlImage, year, rating);
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public String getPosterPath() {
-        return "https://image.tmdb.org/t/p/w154" + posterPath;
-    }
-
-    public Integer getReleaseYear() {
-        return releaseYear;
-    }
-
-    public Double getVoteAverage() {
-        return voteAverage;
+    @Override
+    public String getUrlImage() {
+        return "https://image.tmdb.org/t/p/w154" + urlImage;
     }
 
     public int getRanking() {
         return ranking;
     }
 
+    public void setRanking(int ranking) {
+        this.ranking = ranking;
+    }
+
+
     @Override
     public String toString() {
-        return "#" + ranking + " " + title + " (" + releaseYear + ") ";
+        return "#" + ranking + " " + title + " (" + year + ") ";
     }
 }

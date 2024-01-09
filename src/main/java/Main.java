@@ -1,6 +1,6 @@
 import model.Movie;
 import util.HtmlGenerator;
-import util.TmdbApiCaller;
+import util.TmdbApiCallerTopRatedMovies;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,8 +15,8 @@ public class Main {
 
         // Requisição a API retorna lista do top 250 filmes
         HttpClient httpClient = HttpClient.newHttpClient();
-        TmdbApiCaller tmdbApiCaller = new TmdbApiCaller(apiKey, httpClient);
-        List<Movie> top250movies = tmdbApiCaller.getTop250Movies();
+        TmdbApiCallerTopRatedMovies tmdbApiCallerTopRatedMovies = new TmdbApiCallerTopRatedMovies(apiKey, httpClient);
+        List<Movie> top250movies = tmdbApiCallerTopRatedMovies.getTop250Movies();
 
         // Gera Htlm com os top 250 filmes
         try(PrintWriter writer = new PrintWriter("src/main/frontend/index.html")){
