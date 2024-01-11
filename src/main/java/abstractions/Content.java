@@ -1,4 +1,4 @@
-package model;
+package abstractions;
 
 public abstract class Content {
 
@@ -14,21 +14,13 @@ public abstract class Content {
         this.rating = rating;
     }
 
-    public String getTitle() {
-        return title;
-    }
+    public abstract String getTitle();
 
-    public String getUrlImage() {
-        return urlImage;
-    }
+    public abstract String getUrlImage();
 
-    public Integer getYear() {
-        return year;
-    }
+    public abstract Integer getYear();
 
-    public Double getRating() {
-        return rating;
-    }
+    public abstract Double getRating();
 
     @Override
     public String toString() {

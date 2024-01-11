@@ -1,10 +1,16 @@
 package model;
 
+import abstractions.Content;
+
 public class Movie extends Content {
-    private int ranking;
 
     public Movie(String title, String urlImage, Integer year, Double rating) {
         super(title, urlImage, year, rating);
+    }
+
+    @Override
+    public String getTitle() {
+        return null;
     }
 
     @Override
@@ -12,17 +18,14 @@ public class Movie extends Content {
         return "https://image.tmdb.org/t/p/w154" + urlImage;
     }
 
-    public int getRanking() {
-        return ranking;
+    @Override
+    public Integer getYear() {
+        return null;
     }
-
-    public void setRanking(int ranking) {
-        this.ranking = ranking;
-    }
-
 
     @Override
-    public String toString() {
-        return "#" + ranking + " " + title + " (" + year + ") ";
+    public Double getRating() {
+        return null;
     }
 }
+

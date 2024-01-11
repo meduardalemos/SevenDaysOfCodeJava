@@ -1,6 +1,6 @@
-import model.Movie;
-import util.HtmlGenerator;
-import util.TmdbApiCallerTopRatedMovies;
+import abstractions.Content;
+import services.HtmlGeneratorTop250RatedMovies;
+import services.Top250RatedMoviesTmdb;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,13 +15,13 @@ public class Main {
 
         // Requisição a API retorna lista do top 250 filmes
         HttpClient httpClient = HttpClient.newHttpClient();
-        TmdbApiCallerTopRatedMovies tmdbApiCallerTopRatedMovies = new TmdbApiCallerTopRatedMovies(apiKey, httpClient);
-        List<Movie> top250movies = tmdbApiCallerTopRatedMovies.getTop250Movies();
+        Top250RatedMoviesTmdb top250RatedMoviesTmdb = new Top250RatedMoviesTmdb(apiKey, httpClient);
+        List<Content> top250movies = top250RatedMoviesTmdb.getContentList();
 
         // Gera Htlm com os top 250 filmes
         try(PrintWriter writer = new PrintWriter("src/main/frontend/index.html")){
-            HtmlGenerator htmlGenerator = new HtmlGenerator(writer);
-            htmlGenerator.generateHTML(top250movies);
+            HtmlGeneratorTop250RatedMovies htmlGeneratorTop250RatedMovies = new HtmlGeneratorTop250RatedMovies(writer);
+            htmlGeneratorTop250RatedMovies.generateHtml(top250movies);
             System.out.println("Arquivo html salvo com sucesso!");
         } catch (IOException ex) {
             System.err.println("Erro ao salvar o arquivo html: " + ex.getMessage());

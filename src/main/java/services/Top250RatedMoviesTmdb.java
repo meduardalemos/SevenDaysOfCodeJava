@@ -1,7 +1,7 @@
-package util;
+package services;
 
-import model.JSONParserMovies;
-import model.Movie;
+import abstractions.ApiClient;
+import abstractions.Content;
 
 import java.io.IOException;
 import java.net.URI;
@@ -12,11 +12,12 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TmdbApiCallerTopRatedMovies {
+public class Top250RatedMoviesTmdb implements ApiClient {
     private final String apiKey;
     private final HttpClient httpClient;
 
-    public TmdbApiCallerTopRatedMovies(String apiKey, HttpClient httpClient) {
+
+    public Top250RatedMoviesTmdb(String apiKey, HttpClient httpClient) {
         if (apiKey == null || apiKey.trim().isEmpty()) {
             throw new IllegalArgumentException("A ApiKey não pode ser nula!");
         }
@@ -25,32 +26,32 @@ public class TmdbApiCallerTopRatedMovies {
     }
 
     // Método que retorna a lista com os top 250 movies ordenados
-    public List<Movie> getTop250Movies () {
+    public List<Content> getContentList() {
 
         // Variáveis para controle da quantidade de resultados obtidos
         int desiredResults = 250;
         int currentPage = 1;
 
         // Cria a lista para armazenar os top 250 filmes
-        List<Movie> top250Movies = new ArrayList<>();
+        List<Content> top250RatedMovies = new ArrayList<>();
 
-        while (top250Movies.size() < desiredResults) {
+        while (top250RatedMovies.size() < desiredResults) {
 
             // Faz chamada a API do TMDB top rated movies e retorna a resposta da requisição
-            String responseBody = callTmdbApiTopRatedMovies(httpClient, currentPage);
+            String responseBody = callTmdbApi(httpClient, currentPage);
 
             // Processa a resposta JSON em movie e adiciona a lista
-            JSONParserMovies jsonParserMovies = new JSONParserMovies(responseBody, desiredResults);
-            jsonParserMovies.parseJsonToListOfContents(top250Movies);
+            JsonParserTmdbMovies jsonParserTmdbMovies = new JsonParserTmdbMovies(responseBody, desiredResults);
+            jsonParserTmdbMovies.parseJsonToListOfContents(top250RatedMovies);
 
             currentPage++;
 
             }
 
-        return top250Movies;
+        return top250RatedMovies;
     }
 
-    private String callTmdbApiTopRatedMovies(HttpClient httpClient, int currentPage) {
+    private String callTmdbApi(HttpClient httpClient, int currentPage) {
 
         try {
             URI uri = new URI("https://api.themoviedb.org/3/movie/top_rated?api_key=" +

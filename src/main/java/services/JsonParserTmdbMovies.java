@@ -1,45 +1,48 @@
-package model;
+package services;
 
+import abstractions.Content;
+import abstractions.JsonParser;
+import model.Movie;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.List;
 
-public class JSONParserMovies {
+public class JsonParserTmdbMovies implements JsonParser {
 
-    private String responseBody;
-    private int desiredResults;
+    private final String responseBody;
+    private final int desiredResults;
 
-    public JSONParserMovies(String responseBody, int desiredResults) {
+    public JsonParserTmdbMovies(String responseBody, int desiredResults) {
         this.responseBody = responseBody;
         this.desiredResults = desiredResults;
     }
 
-    public void parseJsonToListOfContents(List<Movie> movieList) {
+    public void parseJsonToListOfContents(List<Content> contentList) {
         try {
             // Converte a string responseBody em um JsonArray de JsonObjects
-            JSONArray resultsArray = parseResponseBodeyIntoJsonArray(responseBody, "results");
+            JSONArray resultsArray = parseResponseBodyIntoJsonArray(responseBody);
 
             // Converte o JsonArray em movies e adiciona a lista
-            parseJsonArrayMoviesIntoMoviesList(resultsArray, movieList);
+            parseJsonArrayMoviesIntoContentList(resultsArray, contentList);
         } catch (JSONException ex) {
             System.err.println("Erro ao tentar converter o JSON em filmes: "
                     + ex.getMessage());
             ex.printStackTrace();
         }
-
     }
 
-    private JSONArray parseResponseBodeyIntoJsonArray (String responseBody, String key) {
+    private JSONArray parseResponseBodyIntoJsonArray(String responseBody) {
         JSONObject jsonResponseBody = new JSONObject(responseBody);
-        return jsonResponseBody.getJSONArray(key);
+        return jsonResponseBody.getJSONArray("results");
     }
 
-    private void parseJsonArrayMoviesIntoMoviesList (JSONArray resultsArray, List<Movie> movieList) {
+    private void parseJsonArrayMoviesIntoContentList(JSONArray resultsArray,
+                                                     List<Content> contentList) {
 
         for (int i = 0; i < resultsArray.length(); i++) {
 
-            if (movieList.size() >= desiredResults) {
+            if (contentList.size() >= desiredResults) {
                 break;
             }
 
@@ -52,9 +55,8 @@ public class JSONParserMovies {
             Double rating = movieJson.getDouble("vote_average");
 
             Movie currentMovie = new Movie(title, urlImage, year, rating);
-            currentMovie.setRanking(movieList.size() + 1);
 
-            movieList.add(currentMovie);
+            contentList.add(currentMovie);
         }
     }
 }
