@@ -46,6 +46,16 @@ public class HtmlGenerator {
     }
 
     private void generateMovieCard(Movie movie){
+
+        // Tratamento do tamanho do título para adequação ao html
+        String longTitle = movie.getTitle();
+        String shortTitle;
+        if (longTitle.length() > 40) {
+            shortTitle = longTitle.substring(0, 20) + "...";
+        } else {
+            shortTitle = longTitle;
+        }
+
         String html = """
                                     <div class="movie-card">
                                         <div class="movie-title-container">
@@ -59,7 +69,7 @@ public class HtmlGenerator {
                                             <h5 class="rate-text">Rate: %.1f</h5>
                                         </div>
                                     </div>
-                """.formatted(movie.getRanking(), movie.getTitle(), movie.getYear(),
+                """.formatted(movie.getRanking(), shortTitle, movie.getYear(),
                 movie.getUrlImage(),
                 movie.getTitle(), movie.getRating());
         printWriter.write(html);
